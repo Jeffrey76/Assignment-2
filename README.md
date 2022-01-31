@@ -37,7 +37,7 @@ SQL Database Server Connection access set to localhost:3306
 In Docker, Database Connection access set to Database15 Container within the same Docker Network
 Run "Messages Setup.sql" to create Database Edufi with tables Conversation and Replies
 
-### Running of applications (Conversation API, Repliesapi API, UI)
+### Running of applications in local machine (Conversation API, Repliesapi API, UI)
 ```sh
 cd ../conversationapi
 go run main.go
@@ -46,3 +46,17 @@ go run main.go
 cd ../ui
 go run main.go
 ```
+
+
+### Running of applications in Docker (Conversation API, Repliesapi API, UI)
+```sh
+docker pull jeffrey76/userinterface:latest
+docker pull jeffrey76/conversationapi:latest
+docker pull jeffrey76/repliesapi:latest
+docker pull jeffrey76/database:latest
+docker container run --detach --name database15 -e MYSQL_ROOT_PASSWORD=password -p 3306 --volumes-from databasedata15 jeffrey76/database
+docker container run --name repliesapi15 -it -p 9156:9156 jeffrey76/repliesapi
+docker container run --name conversationapi15 -it -p 9155:9155 jeffrey76/conversationapi
+docker container run --name ui15 -it -p 9150:8000 jeffrey76/userinterface
+```
+
