@@ -58,5 +58,10 @@ docker container run --detach --name database15 -e MYSQL_ROOT_PASSWORD=password 
 docker container run --name repliesapi15 -it -p 9156:9156 jeffrey76/repliesapi
 docker container run --name conversationapi15 -it -p 9155:9155 jeffrey76/conversationapi
 docker container run --name ui15 -it -p 9150:8000 jeffrey76/userinterface
+docker network connect mynet ui15
+docker network connect mynet repliesapi15
+docker network connect mynet conversationapi15
+docker network connect mynet database15
+UI in server port 9150
 ```
 
