@@ -1,0 +1,167 @@
+body {
+    min-height: 150%;
+    /*background-image: url("/static/sale.png");*/
+    background-blend-mode:  overlay;
+    background-size: cover;
+}
+
+.welcome {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2rem;
+    color:black;
+}
+
+.center {
+    height: auto;
+     display: flex;
+     justify-content: center;
+     align-items: center
+}
+
+:root {
+    --main-light-color: #aaf597;
+    --main-dark-color: #c4bab8;
+    --main-background-color: white;
+  }
+  body {font-family: "Lato", sans-serif}
+  
+  body{
+     background-color: var(--main-background-color);
+  }
+  
+  .box{
+     width: 140vh;
+     height: auto;
+    height:40vh;
+     /* border: solid black; */
+     margin: auto;
+     position: relative;
+     display: block;
+  }
+  
+  .boxsmall{
+     width: 140vh;
+     height: auto;
+    height:20vh;
+     /* border: solid black; */
+     margin: auto;
+     position: relative;
+     display: block;
+  }
+  
+  .leftbox{
+     width: 60%;
+    height:auto;
+     /*border: 2px solid black; */
+     position: absolute;
+    left:0px;
+     display: block;
+  }
+  
+  .rightbox {
+    width: 60%;
+    height:auto;
+    /*border: 2px solid #73AD21;*/
+    position: absolute;
+    right: 0px;
+    display:block;
+  }
+  
+  .center{
+     padding-top: 5%;
+  }
+  
+  .dialog-1{
+       height: 100%;
+       width: 90%;
+       background-color: var(--main-dark-color);
+       position: absolute;
+       /*border-radius: 30%;*/
+      margin: 20px;
+  }
+  
+  .dialog-2{
+       height: 100%;
+       width: 90%;
+       background-color: var(--main-light-color);
+       position: absolute;
+       /*border-radius: 30%;*/
+      margin: 20px;
+  }
+  
+  div.textbox{
+    margin-top: 30px;
+    width: 80%;
+    height:auto;
+    text-align: center;
+    border: 2px solid #73AD21;
+    position: absolute;
+    right:10%;
+  
+  }
+  
+  .centertext{
+    text-align:center;
+  }
+ 
+ 
+  div.a {
+   width: 100%;
+   height: 150px;
+   padding: 12px 20px;
+   box-sizing: border-box;
+   border: 2px solid #ccc;
+   border-radius: 4px;
+   background-color: #f8f8f8;
+   font-size: 16px;
+   resize: none;
+   height: auto; 
+   margin-bottom: 40px;
+  }
+  
+   div.b {
+   width: 100%;
+   height: 150px;
+   padding: 12px 20px;
+   box-sizing: border-box;
+   border: 2px solid #ccc;
+   border-radius: 4px;
+   background-color: var(--main-light-color);
+   font-size: 16px;
+   resize: none;
+   height: auto; 
+   margin-bottom: 40px;
+ }
+ 
+ button.a{
+   background: darkcyan;
+   color:white;
+   text-align: center;
+ }
+ 
+ .button {
+   background-color: #439645;
+   border: none;
+   color: white;
+   padding: 12px 28px;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 18px;
+   margin: 4px 2px;
+   cursor: pointer;
+   border-radius: 20px;
+ }
+ 
+ textarea{
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+ }
+ 
+ .centerelement{
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+ }
+  

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Chat</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/static/template.css">
+
+
+<script>
+function myFunc(a1,a2,a3){
+    if (a1 == a2){
+      //alert("Same")
+      document.getElementById("chatbox"+a3).classList.add("rightbox");
+      document.getElementById("dialog"+a3).classList.add("b");
+    }
+    else{
+      //alert("Different");
+      document.getElementById("chatbox"+a3).classList.add("leftbox");
+      //document.getElementById("dialog"+a3).classList.add("dialog-1");
+      document.getElementById("dialog"+a3).classList.add("a");
+    }
+ }
+  </script>
+
+ 
+ <div class="w3-top">
+  <div class="w3-bar w3-black w3-card">
+    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="/" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+    <a href="/view/{{.ID}}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View</a>
+    <a href="#tour" class="w3-bar-item w3-button w3-padding-large w3-hide-small">TOUR</a>
+    <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hide-small">CONTACT</a>
+    <div class="w3-dropdown-hover w3-hide-small">
+      <button class="w3-padding-large w3-button" title="More">MORE <i class="fa fa-caret-down"></i></button>     
+      <div class="w3-dropdown-content w3-bar-block w3-card-4">
+        <a href="#" class="w3-bar-item w3-button">Merchandise</a>
+        <a href="#" class="w3-bar-item w3-button">Extras</a>
+        <a href="#" class="w3-bar-item w3-button">Media</a>
+      </div>
+    </div>
+    <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>
+  </div>
+</div>
+
+
+ <div class="box" style="border: 0px solid blue; height:auto">
+ 
+   <div class="center" style="border: 0px solid red; margin-bottom: 50px;">
+     <div class="centertext">
+      <h2 class="w3-wide style">User ID: {{.ID}}</h1>
+     <h2 class="w3-wide style">{{.DataFields.Convo.ConversationName}}</h1>
+     <p class="w3-opacity">Conversation ID: {{.DataFields.Convo.ID}}, {{.DataFields.Convo.InitiatorID}}, {{.DataFields.Convo.RecipientID}},{{.DataFields.Convo.StartTime}},
+         {{.DataFields.Convo.NoofMessages}}</p>
+     </div>
+   </div>
+   {{range $element := .DataFields.Replies}} 
+   <div class="boxsmall">
+    <div id = "chatbox{{$element.ID}}">
+    <!--<div id="dialog{{$element.ID}}"></div>-->
+     <div id="dialog{{$element.ID}}" class="w3-justify">
+      <b>{{$element.Header}}</b>
+      <p>{{$element.Content}}</p>
+      <small>{{$element.ID}}, {{$element.ConversationID}}, {{$element.SenderID}},{{$element.ReceiverID}},
+        {{$element.TimeSent}} &nbsp;&nbsp;&nbsp; [<a href="/edit/{{$.ID}}/{{$.DataFields.Convo.ID}}/{{$element.ID}}">edit</a>][<a href="/delete/{{$element.ID}}">delete</a>]</small>
+   </div>
+   </div>
+ </div>
+ <script>
+  a = myFunc("{{$.ID}}","{{$element.SenderID}}","{{$element.ID}}")
+</script>
+ {{end}}
+
+
+
+  <form action="/create/{{.ID}}/{{.DataFields.Convo.ID}}" method="POST" style="border: 0px solid red; font-size: 18px;">
+    <textarea id="w3review" name="header" rows="1" placeholder="Header" cols="120"></textarea>
+ <textarea id="w3review" name="body" rows="2" placeholder="Message" cols="120"></textarea>
+      <input type="submit" class="centerelement button" value="Save"><br>
+    </form>
+    
+
+<!--a href="/write/{{$.ID}}/{{.DataFields.Convo.ID}}">
+ <button class="button">Send</button>
+</a>-->
+ 
+ <!--<div class="boxsmall">
+ <div class="rightbox">
+   <div class="w3-justify b">
+       Replyyyyy
+       <p>this is some message this is some message this is some message this is some message this is some message this is some message this is some message</p>
+   </div>
+ </div>
+ </div>
+ <div class="boxsmall">
+  <div class="leftbox">
+    <div class="w3-justify a">
+        Replyyyyy
+        <p>this is some message this is some message this is some message this is some message this is some message this is some message this is some message</p>
+    </div>
+  </div>
+  </div>
+ <p>[]</p>
+ </div>
+
+ <script>
+   //document.getElementById("chatbox1").classList.add("leftbox");
+//   document.getElementById("chatbox2").classList.add("leftbox");
+  // document.getElementById("chatbox3").classList.add("leftbox");
+   //document.getElementById("chatbox4").classList.add("leftbox");
+ // <p id="demo"></p>
+// function myFunction(p1, p2) {
+  // return p1 * p2;
+ //}
+ //document.getElementById("demo").innerHTML = myFunction("{{$.ID}}", 4);
+ //document.getElementById("demo").classList.add(myFunc("{{$.ID}}","$.element.ID"));
+//myFunc("{{$.ID}}","101")
+ </script>
+-->
