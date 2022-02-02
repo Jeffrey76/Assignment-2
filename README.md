@@ -23,7 +23,7 @@ The UI also makes use of other APIs that are developed externally, which include
 
 ## 2. Architecture diagram
 
-
+![alt text](https://github.com/Jeffrey76/Assignment-2/blob/main/Untitled%20Diagram.drawio.png?raw=true)
 
 
 ## 3. Instructions for setting up and running your microservices
