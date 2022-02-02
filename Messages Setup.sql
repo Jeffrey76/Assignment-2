@@ -18,9 +18,9 @@ create table Conversation(
 	ConversationName varchar(30)
     );
 insert into Conversation(ID,InitiatorID,RecipientID,StartTime,NoofMessages,ConversationName) 
-values("1","101","102",now(),1,"TestConversation");
+values("1","101","102",now(),4,"TestConversation");
 insert into Conversation(ID,InitiatorID,RecipientID,StartTime,NoofMessages,ConversationName) 
-values("2","102","101",now(),3,"SecondConversation");
+values("2","102","101",now(),0,"SecondConversation");
 use edufi;
 create table Replies(
 	ID               int PRIMARY KEY,
