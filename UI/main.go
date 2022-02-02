@@ -13,16 +13,17 @@ import (
 )
 
 //TO USE IN LOCAL COMPUTER
-const conversationURL = "http://localhost:9155/api/v1/conversation"
-const aconversationURL = "http://localhost:9155/api/v1/aconversation"
-const replyURL = "http://localhost:9156/api/v1/reply"
+//const conversationURL = "http://localhost:9155/api/v1/conversation"
+//const aconversationURL = "http://localhost:9155/api/v1/aconversation"
+//const replyURL = "http://localhost:9156/api/v1/reply"
 
 //TO USE IN DOCKER
-//const conversationURL = "http://conversationapi15:9155/api/v1/conversation"
-//const aconversationURL = "http://conversationapi15:9155/api/v1/aconversation"
-//const replyURL = "http://repliesapi15:9156/api/v1/reply"
+const conversationURL = "http://conversationapi15:9155/api/v1/conversation"
+const aconversationURL = "http://conversationapi15:9155/api/v1/aconversation"
+const replyURL = "http://repliesapi15:9156/api/v1/reply"
 
-const studentURL = "http://edufi_student_backend:9211/api/v1/students"
+const studentURL = "http://10.31.11.12:9211/api/v1/students"
+const tutorURL = "http://10.31.11.12:9181/api/v1/tutor/GetAllTutor"
 
 //const studentURL = "http://localhost:9155/api/v1/students"
 
@@ -72,14 +73,23 @@ type Student struct {
 	Phone_number  string
 }
 
-//RETRIEVE ALL Users
+type Tutor struct {
+	Deleted      string
+	TutorID      int
+	Firstname    string
+	Lastname     string
+	Email        string
+	Descriptions string
+}
+
+//RETRIEVE ALL Students
 func GetUsers() []Student {
 	url := studentURL
 	fmt.Println("URL: ", url)
 	response, err := http.Get(url)
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error %s\n", err)
-		return []Student{}
+		return nil
 	} else {
 		fmt.Println("PASS 1")
 		data, _ := ioutil.ReadAll(response.Body)
@@ -98,30 +108,31 @@ func GetUsers() []Student {
 	}
 }
 
-/*
-func GetUsers() Student {
-	url := replyURL
-	//fmt.Println("CODE: ", code)
-	//if code != "" {
-	url = studentURL //+ "/" + code
-	//}
+//RETRIEVE ALL Tutors
+func GetTutor() []Tutor {
+	url := tutorURL
+	fmt.Println("URL: ", url)
 	response, err := http.Get(url)
-
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error %s\n", err)
+		return nil
 	} else {
+		fmt.Println("PASS 1")
 		data, _ := ioutil.ReadAll(response.Body)
-		var driver Student
-		err := json.Unmarshal([]byte(data), &driver)
+		fmt.Println(response.StatusCode)
+		//var trip Trip
+		var users []Tutor
+		fmt.Println("PASS 2")
+		err := json.Unmarshal([]byte(data), &users)
 		if err != nil {
-			fmt.Println("ERROR1: ", err)
+			fmt.Println(err)
 		}
+		fmt.Println(users)
+		fmt.Println("PASS 3")
 		response.Body.Close()
-		fmt.Print(driver)
-		return driver
+		return users
 	}
-	return Student{}
-}*/
+}
 
 //GET Conversation of Code ID
 func GetConversation(code string) Conversation {
@@ -429,12 +440,19 @@ type Data6 struct {
 	UserID string
 }
 
+//backup for data9
 type Data7 struct {
 	Users  []Student
 	UserID string
 }
 
-var templates = template.Must(template.ParseFiles("template/view.html", "template/template.html", "template/chat.html", "template/edit.html", "template/create.html", "template/edit1.html", "template/write.html"))
+type Data9 struct {
+	Users  []Student
+	Tutors []Tutor
+	UserID string
+}
+
+var templates = template.Must(template.ParseFiles("template/view.html", "template/home.html", "template/chat.html", "template/edit.html", "template/edit1.html", "template/write.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p Data) {
 	err := templates.ExecuteTemplate(w, tmpl+".html", p)
@@ -500,9 +518,7 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	UserID, _ := strconv.ParseInt(split[0], 10, 64)
 
 	if int(UserID) == a { //FIND SENDER OF THIS MESSAGE IF IS THE INITIATOR OR RECIPIENT
-		fmt.Println("Excalibur1")
 		addReply("1", Replies{Content: body, Header: header, ConversationID: int(ConvoID), ReceiverID: b, SenderID: int(UserID)}) //need sender and receiver
-		fmt.Println("Excalibur2")
 	} else {
 		addReply("1", Replies{Content: body, Header: header, ConversationID: int(ConvoID), ReceiverID: a, SenderID: int(UserID)}) //need sender and receiver
 	}
@@ -510,6 +526,9 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	//p := GetReply(id)
 	//p.Content = body
 	//updateReply(id, p)
+	c := GetConversation(split[1]) //RETRIEVE CONVERSATION TO UPDATE NUMBER OF MESSAGES
+	c.NoofMessages = c.NoofMessages + 1
+	updateConversation(split[1], c)
 	http.Redirect(w, r, "/chat/"+id, http.StatusFound)
 }
 
@@ -601,41 +620,33 @@ func writeHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/writeconvo/"):]
 
 	fmt.Println(id)
-
-	/*var users = []User{
-		{
-			Name:   "Amanda",
-			UserID: "101",
-		},
-		{
-			Name:   "Bally",
-			UserID: "102",
-		},
-		{
-			Name:   "Caera",
-			UserID: "103",
-		},
-		{
-			Name:   "Dominic",
-			UserID: "104",
-		},
-	}*/
-
 	var users1 = GetUsers()
-	/*if len(users1) == 0 {
+	if len(users1) == 0 {
 		users1 = []Student{
 			{Student_id: "1", Name: "Wai Hou Man", Date_of_birth: "996076800000", Address: "BLK678B Jurong West, Singapore", Phone_number: "6511111111"},
 			{Student_id: "2", Name: "Zachary Hong Rui Quan", Date_of_birth: "1007136000000", Address: "BLK123F Orchard Rd", Phone_number: "6512345678"},
 			{Student_id: "3", Name: "Data rn is hard coded as", Date_of_birth: "912441600000", Address: "BLK666A Punggol", Phone_number: "6533333333"},
 			{Student_id: "4", Name: "Student API Link Down", Date_of_birth: "912441600000", Address: "BLK666A Punggol", Phone_number: "6533333333"},
 		}
-	}*/
-	//users2 := changetype(users1) //CHANGE TO ANOTHER STRUCT THAT CAN WORK WITH HTML
-
-	p2 := Data7{
+	}
+	var tutors = GetTutor()
+	if len(tutors) == 0 {
+		tutors = []Tutor{
+			{Deleted: "", TutorID: 1, Firstname: "Tutor", Lastname: "1", Email: "email", Descriptions: "Relief Teacher"},
+			{Deleted: "", TutorID: 2, Firstname: "Tutor", Lastname: "2", Email: "email", Descriptions: "Relief Teacher"},
+		}
+	}
+	tutors = changetutorid(tutors)
+	/*p2 := Data7{
 		UserID: id,
 		Users:  users1,
+	}*/
+	p2 := Data9{
+		UserID: id,
+		Users:  users1,
+		Tutors: tutors,
 	}
+	fmt.Println(p2)
 
 	fmt.Println("User ID: ", id)
 	err := templates.ExecuteTemplate(w, "write.html", p2)
@@ -649,22 +660,22 @@ type Data8 struct {
 	UserID string
 }
 
-/*
-func changetype(u []User1) []Student { //GOLANG CANNOT PASS ATTRIBUTES THAT START WITH LOWERCASE LETTER TO SHOW IN HTML
-	u2 := []Student{}
+func changetutorid(u []Tutor) []Tutor { //GOLANG CANNOT PASS ATTRIBUTES THAT START WITH LOWERCASE LETTER TO SHOW IN HTML
+	u2 := []Tutor{}
 	for _, v := range u {
-		var temp = Student{
-			Student_id:    v.student_id,
-			Name:          v.name,
-			Date_of_birth: v.date_of_birth,
-			Address:       v.address,
-			Phone_number:  v.phone_number,
+		var temp = Tutor{
+			Deleted:      v.Deleted,
+			TutorID:      v.TutorID + 100,
+			Firstname:    v.Firstname,
+			Lastname:     v.Lastname,
+			Email:        v.Email,
+			Descriptions: v.Descriptions,
 		}
 		//fmt.Println(temp)
 		u2 = append(u2, temp)
 	}
 	return u2
-}*/
+}
 
 func createconvoHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/createconvo/"):]
@@ -694,13 +705,48 @@ func createconvoHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	template := template.Must(template.ParseFiles("template/home.html"))
-	if err := template.ExecuteTemplate(w, "home.html", nil); err != nil {
+
+	var users1 = GetUsers()
+	if len(users1) == 0 {
+		users1 = []Student{
+			{Student_id: "1", Name: "Wai Hou Man", Date_of_birth: "996076800000", Address: "BLK678B Jurong West, Singapore", Phone_number: "6511111111"},
+			{Student_id: "2", Name: "Zachary Hong Rui Quan", Date_of_birth: "1007136000000", Address: "BLK123F Orchard Rd", Phone_number: "6512345678"},
+			{Student_id: "3", Name: "Data rn is hard coded as", Date_of_birth: "912441600000", Address: "BLK666A Punggol", Phone_number: "6533333333"},
+			{Student_id: "4", Name: "Student API Link Down", Date_of_birth: "912441600000", Address: "BLK666A Punggol", Phone_number: "6533333333"},
+		}
+	}
+	var tutors = GetTutor()
+	if len(tutors) == 0 {
+		tutors = []Tutor{
+			{Deleted: "", TutorID: 1, Firstname: "Tutor", Lastname: "1", Email: "email", Descriptions: "Relief Teacher"},
+			{Deleted: "", TutorID: 2, Firstname: "Tutor", Lastname: "2", Email: "email", Descriptions: "Relief Teacher"},
+		}
+	}
+	tutors = changetutorid(tutors)
+	/*p2 := Data7{
+		UserID: id,
+		Users:  users1,
+	}*/
+	p2 := Data9{
+		UserID: "0",
+		Users:  users1,
+		Tutors: tutors,
+	}
+
+	fmt.Println(p2)
+	//fmt.Println("User ID: ", 0)
+	err := templates.ExecuteTemplate(w, "home.html", p2)
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+
+	//template := template.Must(template.ParseFiles("template/home.html"))
+	//if err := template.ExecuteTemplate(w, "home.html", nil); err != nil {
+	//		http.Error(w, err.Error(), http.StatusInternalServerError)
+	//	}
 }
 
-func removespc(str string) string {
+func removespc(str string) string { //ALLOW ADDING OF < ' > TO DATABASE WITHOUT ERROR
 	if str != "" {
 		i := strings.Index(str, "'")
 		if i > -1 {
@@ -717,16 +763,10 @@ func removespc(str string) string {
 }
 
 func main() {
-	//x := "chars'are'fun"
-	//fmt.Println(removespc(x))
-
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", homeHandler)
-	//http.HandleFunc("/test/", testHandler)
-	//http.HandleFunc("/redirect/", redirect)
 	http.HandleFunc("/chat/", chatHandler)
 	http.HandleFunc("/view/", viewHandler)
-	//http.HandleFunc("/write/", create1Handler)
 	http.HandleFunc("/create/", createHandler)
 	http.HandleFunc("/edit/", editHandler)
 	http.HandleFunc("/save/", saveHandler)
