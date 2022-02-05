@@ -18,9 +18,9 @@ create table Conversation(
 	ConversationName varchar(30)
     );
 insert into Conversation(ID,InitiatorID,RecipientID,StartTime,NoofMessages,ConversationName) 
-values("1","101","102",now(),4,"TestConversation");
+values("1","1","2",now(),0,"TestConversation");
 insert into Conversation(ID,InitiatorID,RecipientID,StartTime,NoofMessages,ConversationName) 
-values("2","102","101",now(),0,"SecondConversation");
+values("2","2","1",now(),0,"SecondConversation");
 use edufi;
 create table Replies(
 	ID               int PRIMARY KEY,
@@ -33,13 +33,13 @@ create table Replies(
     Content varchar(500)
     );
 insert into Replies(ID,ConversationID,SenderID,ReceiverID,TimeSent,Header,Content) 
-values("1","1","101","102",now(),"First Header","This Message is the First Message");
+values("1","1","1","2",now(),"First Header","This Message is the First Message");
 insert into Replies(ID,ConversationID,SenderID,ReceiverID,TimeSent,Header,Content) 
-values("2","1","101","102",now(),"Second Header","This Message is the Second Message");
+values("2","1","1","2",now(),"Second Header","This Message is the Second Message");
 insert into Replies(ID,ConversationID,SenderID,ReceiverID,TimeSent,Header,Content) 
-values("3","1","102","101",now(),"Third Header","This is Person 2's Reply");
+values("3","1","2","1",now(),"Third Header","This is Person 2's Reply");
 insert into Replies(ID,ConversationID,SenderID,ReceiverID,TimeSent,Header,Content) 
-values("4","1","102","101",now(),"Fourth Header","This is Person 2's Second Reply");
+values("4","1","2","1",now(),"Fourth Header","This is Person 2's Second Reply");
 
 
 /*select ID,SenderID,ReceiverID,TimeSent,Header,Content from Replies ;*/
