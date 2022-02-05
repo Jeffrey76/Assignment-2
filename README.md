@@ -26,7 +26,14 @@ The UI also makes use of other APIs that are developed externally, which include
 ![alt text](https://github.com/Jeffrey76/Assignment-2/blob/main/Untitled%20Diagram.drawio.png?raw=true)
 
 
-## 3. Instructions for setting up and running your microservices
+## 3. Link to Container Image
+
+https://hub.docker.com/repository/docker/jeffrey76/userinterface
+https://hub.docker.com/repository/docker/jeffrey76/repliesapi
+https://hub.docker.com/repository/docker/jeffrey76/conversationapi
+
+
+## 4. Instructions for setting up and running your microservices
 ### Importing of additional packages
 ```sh
 go get -u github.com/mitchellh/mapstructure
